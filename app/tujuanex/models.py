@@ -63,5 +63,13 @@ class User(db.Model):
             except Exception as e:
                 db.session.rollback()
 
+    def to_json(self):
+        json_user {
+            "url":url_for('main.get_user',id=self.id),
+            "username": self.username,
+            "email":self.email,
+            "description":self.description,
+        }
+
     def __repr__(self):
         return "<User {}".format(self.username)
