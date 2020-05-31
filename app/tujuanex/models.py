@@ -71,5 +71,7 @@ class User(db.Model):
             "description":self.description,
         }
 
+        return json_user
+
     def __repr__(self):
         return "<User {}".format(self.username)
