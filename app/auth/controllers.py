@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import jsonify,request,url_for,redirect
+from flask_jwt_extended import create_access_token,get_jwt_identity,jwt_required
 
 from app.tujuanex.models import User
 from app import db
@@ -8,8 +9,20 @@ auth = Blueprint('auth',__name__)
 
 @auth.route("/login",methods=['GET','POST'])
 def login():
-    return jsonify({"message":"login successful"})
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+    username = request.json.get("username",None)
+    password = request.json.get("password",None)
 
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        return jsonify({"msg":"Bad username or password"}),401
+    if not user.verify_password(password):
+        return jsonify({"msg":"Bad username or password"}),401
+
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token),200
+    
 @auth.route("/register",methods=['GET','POST'])
 def register():
     if not request.is_json:
@@ -44,5 +57,3 @@ def register():
     except Exception as e:
         return jsonify({"msg":str(e)}),500
     return jsonify({"msg":"user created successfully"}),201
-
-
