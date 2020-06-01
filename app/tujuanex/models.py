@@ -2,10 +2,8 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from flask import current_app,request,url_for
 from app import db
 
-
 class Permission:
     ADMIN = 16
-
 
 class Role(db.Model):
     __tablename__ = "roles"
@@ -64,10 +62,13 @@ class User(db.Model):
                 db.session.rollback()
 
     def to_json(self):
-        json_user {
-            "url":url_for('main.get_user',id=self.id),
+        json_user = {
+            "id":self.id,
+            "url":url_for('main.user',username=self.username,_external=True),
             "username": self.username,
             "email":self.email,
+            "phone":self.phone_number,
+            "gender":self.gender,
             "description":self.description,
         }
 
