@@ -4,6 +4,8 @@ from app import db
 
 class Permission:
     ADMIN = 16
+    MODERATOR = 8
+    NORMAL = 4
 
 class Role(db.Model):
     __tablename__ = "roles"
@@ -13,6 +15,7 @@ class Role(db.Model):
     default = db.Column(db.Boolean,default=False,index=True)
 
     users = db.relationship('User',backref='role',lazy='dynamic')
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -76,3 +79,7 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User {}".format(self.username)
+
+class Likes(db.Model):
+    __tablename__ = "likes"
+    id = db.Column(db.Integer,primary_key=True)
