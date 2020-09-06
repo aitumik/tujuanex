@@ -1,5 +1,7 @@
 # Tujuanex
 Tujuanex is a flask api for dating
+>  Tujuanex api an inspiration from a tv show the **tujueanex** 
+
 
 ## Installation
 Git clone the project from my repository
@@ -31,7 +33,7 @@ Finally start the server by:
 python3 manage.py runserver
 ```
 
-## Performing your first api requests
+## Performing your first requests
 To make api calls to the app you can use any tool of your choice or language but for our case we will use curl
 ```bash
 curl http://localhost:5000/api/v1/<endpoint>
