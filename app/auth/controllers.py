@@ -57,3 +57,9 @@ def register():
     except Exception as e:
         return jsonify({"msg":str(e)}),500
     return jsonify({"msg":"user created successfully"}),201
+
+@auth.route("/forgot-password",methods=['GET','POST'])
+def forgot_password():
+    msg = {"msg":"forgot password?"}
+    return jsonify(msg)
+

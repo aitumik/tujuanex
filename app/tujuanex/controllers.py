@@ -7,7 +7,6 @@ main = Blueprint('main',__name__)
 
 @main.route("/",methods=['GET','POST'])
 def home():
-		#render the api documentation here
     return jsonify({"message":"home route"})
 
 @main.route("/user/<username>",methods=['GET','POST'])
