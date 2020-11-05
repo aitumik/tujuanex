@@ -1,13 +1,49 @@
 from flask import Blueprint,jsonify,redirect,url_for,request
 from flask_jwt_extended import jwt_required,get_jwt_identity
-from .models import User
+from .models import User,Post,Comment
 from app import db
 
 main = Blueprint('main',__name__)
 
 @main.route("/",methods=['GET','POST'])
 def home():
+    #show home for api
     return jsonify({"message":"home route"})
+
+#***********************************#
+#Posts
+@main.route("/post/create",methods=['POST'])
+@jwt_required
+def createpost():
+    current_user = get_jwt_identity()
+    if request.method == 'POST':
+        post_body = request.json.get("body",None)
+        if post is None: 
+            return jsonify({"msg":"body field is missing"}),302
+        #TODO accept image here from the post
+        post = Post(body=post_body,author=current_user)
+        try:
+            post.save()
+        except Exception as e:
+            return jsonify({"msg":str(e)}),500
+        return jsonify({"msg":"post created successfully"}),201
+    return jsonify({"msg":"invalid request method"})
+
+@main.route("/post/edit/<int:post_id>",method=['PUT'])
+@jwt_required
+def editpost(post_id):
+    post = Post.query.get(int(post_id))
+    if request.method == 'PUT':
+        #sure the method is put
+        #now check if the user owns the post
+        body = request.json.get("body")
+        post.body = body
+        try:
+            post.save()
+            return jsonify({"msg":"post updated successfully"})
+        except Exception as e:
+            return jsonfi({"msg":str(e)}),302
+    return jsonify({"msg":"invalid request method"}),304
 
 @main.route("/user/<username>",methods=['GET','POST'])
 def user(username):
