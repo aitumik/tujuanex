@@ -7,7 +7,7 @@ Tujuanex is a flask api for dating
 Git clone the project from my repository
 
 ```bash
-git clone https://github.com/Nathan-Kimutai/tujuanex-api.git
+git clone https://github.com/aitumik/tujuanex-api.git
 ```
 Then change to the directory where you cloned the repo
 
@@ -45,5 +45,7 @@ to discuss what you want to change
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Forking?
 
 
