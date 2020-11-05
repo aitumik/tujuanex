@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask import current_app,request,url_for
 from app import db
+from datetime import datetime
 
 class Permission:
     ADMIN = 16
@@ -33,6 +34,9 @@ class User(db.Model):
 
     #other attributes
     description = db.Column(db.Text())
+    image = db.Column(db.String(100))
+
+    #following and followers
 
     @property
     def password(self):
@@ -78,12 +82,49 @@ class User(db.Model):
 
         return json_user
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return "<User {}".format(self.username)
 
-class Likes(db.Model):
-    __tablename__ = "likes"
+
+class Post(db.Model):
+    __tablename__ = "posts"
 
     id = db.Column(db.Integer,primary_key=True)
-    count = db.Column(db.Integer,default=0)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+    def to_json(self):
+        data = {
+            "id":self.id,
+            "body":self.body,
+            "timestamp":self.timestamp
+            "user_id": self.user_id
+            }
+
+    def __repr__(self):
+        return "<Post {}>".format(self.body)
+
+
+class Comment(db.Model): __tablename__ = "comments" id = db.Column(db.Integer,primary_key=True) body = db.Column(db.String(100))
+    timestamp = db.Column(db.DateTime,default=datetime.utcnow)
+    updated = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def __repr__(self):
+        return "<Comment {}>".format(self.body)
+
 
