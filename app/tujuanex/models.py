@@ -31,6 +31,7 @@ class User(db.Model):
     gender = db.Column(db.String(10))
 
     role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
+    posts = db.relationship("Post",backref="author",lazy="dynamic")
 
     #other attributes
     description = db.Column(db.Text())
@@ -96,7 +97,12 @@ class Post(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow)
+    #one to many relationship
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    comments = db.relationship("Comment",backref="post",lazy="dynamic")
+
+    #add image to post
+    image = db.Column(db.String(255))
 
     def save(self):
         db.session.add(self)
@@ -107,18 +113,26 @@ class Post(db.Model):
         data = {
             "id":self.id,
             "body":self.body,
-            "timestamp":self.timestamp
-            "user_id": self.user_id
+            "timestamp":self.timestamp,
+            "user_id": self.author.id
             }
 
     def __repr__(self):
         return "<Post {}>".format(self.body)
 
 
-class Comment(db.Model): __tablename__ = "comments" id = db.Column(db.Integer,primary_key=True) body = db.Column(db.String(100))
+class Comment(db.Model): 
+    __tablename__ = "comments" 
+
+    id = db.Column(db.Integer,primary_key=True) 
+    body = db.Column(db.String(100))
     timestamp = db.Column(db.DateTime,default=datetime.utcnow)
     updated = db.Column(db.DateTime)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    post_id = db.Column(db.Integer,db.ForeignKey("posts.id"))
+    
+    #is the comment blocked or bad
+    blocked = db.Column(db.Boolean,default=False)
 
     def save(self):
         db.session.add(self)
@@ -126,5 +140,4 @@ class Comment(db.Model): __tablename__ = "comments" id = db.Column(db.Integer,pr
 
     def __repr__(self):
         return "<Comment {}>".format(self.body)
-
 
