@@ -94,4 +94,3 @@ def edit_profile(username):
         db.session.rollback()
     return jsonify({"msg":"profile modified successfully"}),201
  
- 

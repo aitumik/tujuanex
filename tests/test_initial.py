@@ -1,19 +1,20 @@
 from datetime import datetime,timedelta
 import unittest
-from ..app import db
+from app import current_app,db
 from app.tujuanex.models import User,Post
 
 class UserModelCase(TestCase):
     def setUp(self):
-        #db.create_all()
-        pass
+        self.app = create_app("testing")
+        self.ctx = self.app.app_context()
+        self.ctx.push()
+        db.create_all()
 
     def tearDown(self):
-        pass
+        db.session.remove()
+        db.drop_all()
+        self.ctx.pop()
 
-    def test_avatar(self):
-        pass
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    def test_app_exists(self):
+        self.assertFalse(current_app is None)
 

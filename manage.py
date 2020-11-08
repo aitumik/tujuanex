@@ -7,6 +7,13 @@ app = create_app("default")
 manager = Manager(app)
 migrate = Migrate(app,db)
 
+#tests
+@manager.command
+def test():
+    import unittest
+    tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(tests)
+
 def make_shell_context():
     return dict(app=app,db=db,User=User,Post=Post,Comment=Comment)
 

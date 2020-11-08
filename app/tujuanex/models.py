@@ -51,12 +51,15 @@ class User(db.Model):
     description = db.Column(db.Text())
     image = db.Column(db.String(100))
 
-    #following and followers
+    #followed
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
+    
+    #following
+    #TODO Implement following
 
     @property
     def password(self):
@@ -83,7 +86,7 @@ class User(db.Model):
             self.followed.remove(user)
 
     def like(self,post):
-        pass
+       pass 
 
     def unlike(self,post):
         pass
