@@ -18,6 +18,20 @@ class Role(db.Model):
 
     users = db.relationship('User',backref='role',lazy='dynamic')
 
+    def __repr__(self):
+        data = {
+                "name":self.name,
+                "ddescription":self.description
+                }
+        return data
+
+
+#associtation table
+followers = db.Table("followers",
+        db.Column("follower_id",db.Integer,db.ForeignKey("users.id")),
+        db.Column("followed_id",db.Integer,db.ForeignKey("users.id")),
+)
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -38,6 +52,11 @@ class User(db.Model):
     image = db.Column(db.String(100))
 
     #following and followers
+    followed = db.relationship(
+        'User', secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     @property
     def password(self):
@@ -50,25 +69,18 @@ class User(db.Model):
     def verify_password(self,password):
         return check_password_hash(self.password_hash,password)
 
-    #Generate fake users
-    @staticmethod
-    def generate_fake(count=100):
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-        seed()
-        for i in range(count):
-            u = User(
-                username=forgery_py.internet.user_name(True),
-                full_name=forgery_py.name.full_name(),
-                email = forgery_py.internet.email_address(),
-                password_hash = forgery_py.lorem_ipsum.word()
-            )
-            db.session.add(u)
-            try:
-                db.session.commit()
-            except Exception as e:
-                db.session.rollback()
+    def is_following(self,user):
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 2
+
+    #follow
+    def follow(self,user):
+        if not self.is_following(user):
+            self.followed.append(user)
+
+    #unfollow
+    def unfollow(user):
+        if self.is_following(user):
+            self.followed.remove(user)
 
     def to_json(self):
         json_user = {
@@ -79,6 +91,7 @@ class User(db.Model):
             "phone":self.phone_number,
             "gender":self.gender,
             "description":self.description,
+            "posts":[post.to_json() for post in self.posts.all()],
         }
 
         return json_user
@@ -89,7 +102,6 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User {}".format(self.username)
-
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -116,6 +128,7 @@ class Post(db.Model):
             "timestamp":self.timestamp,
             "user_id": self.author.id
             }
+        return data
 
     def __repr__(self):
         return "<Post {}>".format(self.body)

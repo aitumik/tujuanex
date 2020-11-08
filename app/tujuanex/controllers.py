@@ -29,7 +29,7 @@ def createpost():
         return jsonify({"msg":"post created successfully"}),201
     return jsonify({"msg":"invalid request method"})
 
-@main.route("/post/edit/<int:post_id>",method=['PUT'])
+@main.route("/post/edit/<int:post_id>",methods=['PUT'])
 @jwt_required
 def editpost(post_id):
     post = Post.query.get(int(post_id))
