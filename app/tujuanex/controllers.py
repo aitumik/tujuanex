@@ -12,6 +12,16 @@ def home():
 
 #***********************************#
 #Posts
+
+@main.route("/posts",methods=['GET'])
+@jwt_required
+def posts():
+    if request.method == 'GET':
+        posts = Post.query.all()
+        res = [post.to_json() for post in posts]
+        return jsonify({"msg":res})
+    return jsonify({"msg":"invalid requests method"}),403
+
 @main.route("/post/create",methods=['POST'])
 @jwt_required
 def createpost():

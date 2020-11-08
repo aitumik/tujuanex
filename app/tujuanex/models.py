@@ -83,7 +83,7 @@ class User(db.Model):
             self.followed.remove(user)
 
     def like(self,post):
-        
+        pass
 
     def unlike(self,post):
         pass
