@@ -82,6 +82,12 @@ class User(db.Model):
         if self.is_following(user):
             self.followed.remove(user)
 
+    def like(self,post):
+        
+
+    def unlike(self,post):
+        pass
+
     def to_json(self):
         json_user = {
             "id":self.id,
@@ -91,6 +97,8 @@ class User(db.Model):
             "phone":self.phone_number,
             "gender":self.gender,
             "description":self.description,
+            "followers":len(self.followers.all()),
+            "following":len(self.followed.all()),
             "posts":[post.to_json() for post in self.posts.all()],
         }
 
@@ -101,7 +109,19 @@ class User(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return "<User {}".format(self.username)
+        data = {
+            "id":self.id,
+            "url":url_for('main.user',username=self.username,_external=True),
+            "username": self.username,
+            "email":self.email,
+            "phone":self.phone_number,
+            "gender":self.gender,
+            "description":self.description,
+            "followers":len(self.followers.all()),
+            "following":len(self.followed.all()),
+            "posts":[post.to_json() for post in self.posts.all()],
+        }
+        return data
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -112,6 +132,7 @@ class Post(db.Model):
     #one to many relationship
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     comments = db.relationship("Comment",backref="post",lazy="dynamic")
+    likes = db.relationship("Like",lazy="dynamic")
 
     #add image to post
     image = db.Column(db.String(255))
@@ -133,6 +154,21 @@ class Post(db.Model):
     def __repr__(self):
         return "<Post {}>".format(self.body)
 
+class Like(db.Model):
+    __tablename__ = "likes"
+
+    id = db.Column(db.Integer,primary_key=True)
+    timestamp = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    post_id = db.Column(db.Integer,db.ForeignKey("posts.id"))
+
+    def to_json(self):
+        data = {}
+        return data
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Comment(db.Model): 
     __tablename__ = "comments" 
