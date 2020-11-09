@@ -93,4 +93,13 @@ def edit_profile(username):
         return jsonify({"msg":str(e)}),500
         db.session.rollback()
     return jsonify({"msg":"profile modified successfully"}),201
- 
+
+#matches
+@main.route("/matches",methods=['GET'])
+@jwt_required
+def matches():
+    data = {}
+    return jsonify({"msg":data}),200
+
+
+

@@ -209,11 +209,20 @@ class Image(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
-class Recomendation(db.Model):
-    __tablename__ = "recomendations"
+class School(db.Model):
+    __tablename__ = "schools"
 
     id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(100))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def to_json(self):
+        data = {}
+        return data
+
 
 
 
