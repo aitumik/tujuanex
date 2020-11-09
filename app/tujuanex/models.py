@@ -3,6 +3,12 @@ from flask import current_app,request,url_for
 from app import db
 from datetime import datetime
 
+#associtation table
+followers = db.Table("followers",
+        db.Column("follower_id",db.Integer,db.ForeignKey("users.id")),
+        db.Column("followed_id",db.Integer,db.ForeignKey("users.id")),
+)
+
 class Permission:
     ADMIN = 16
     MODERATOR = 8
@@ -15,23 +21,11 @@ class Role(db.Model):
     name = db.Column(db.String(64),unique=True)
     default = db.Column(db.Boolean,default=False,index=True)
     description = db.Column(db.String(100))
-
     users = db.relationship('User',backref='role',lazy='dynamic')
 
     def __repr__(self):
-        data = {
-                "name":self.name,
-                "ddescription":self.description
-                }
+        data = {"name":self.name,"description":self.description}
         return data
-
-
-#associtation table
-followers = db.Table("followers",
-        db.Column("follower_id",db.Integer,db.ForeignKey("users.id")),
-        db.Column("followed_id",db.Integer,db.ForeignKey("users.id")),
-)
-
 
 class User(db.Model):
     __tablename__ = "users"
@@ -57,9 +51,6 @@ class User(db.Model):
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
     
-    #following
-    #TODO Implement following
-
     @property
     def password(self):
         raise AttributeError("Password is not readable")
@@ -135,14 +126,11 @@ class Post(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     comments = db.relationship("Comment",backref="post",lazy="dynamic")
     likes = db.relationship("Like",lazy="dynamic")
-
-    #add image to post
     image = db.Column(db.String(255))
 
     def save(self):
         db.session.add(self)
         db.session.commit()
-
 
     def to_json(self):
         data = {
@@ -181,8 +169,6 @@ class Comment(db.Model):
     updated = db.Column(db.DateTime)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     post_id = db.Column(db.Integer,db.ForeignKey("posts.id"))
-    
-    #is the comment blocked or bad
     blocked = db.Column(db.Boolean,default=False)
 
     def save(self):
