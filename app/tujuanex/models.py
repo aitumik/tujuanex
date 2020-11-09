@@ -43,15 +43,14 @@ class User(db.Model):
     phone_number = db.Column(db.String(128),unique=True)
     password_hash = db.Column(db.String(128))
     gender = db.Column(db.String(10))
-
+    date_of_birth = db.Column(db.Date)
+    location = db.Column(db.String(100))
+    bio = db.Column(db.Text())
     role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
     posts = db.relationship("Post",backref="author",lazy="dynamic")
-
-    #other attributes
     description = db.Column(db.Text())
     image = db.Column(db.String(100))
 
-    #followed
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -192,4 +191,37 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "<Comment {}>".format(self.body)
+
+class Image(db.Model):
+    __tablename__ = "images"
+
+    id  = db.Column(db.Integer,primary_key=True)
+    url = db.Column(db.String(255),unique=True)
+
+    def to_json(self):
+        data = \
+        {
+            "url":self.url
+        }
+        return data
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class Recomendation(db.Model):
+    __tablename__ = "recomendations"
+
+    id = db.Column(db.Integer,primary_key=True)
+
+
+
+
+
+
+
+
+
+
 
