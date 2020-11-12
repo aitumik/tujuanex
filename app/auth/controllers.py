@@ -60,6 +60,21 @@ def register():
 
 @auth.route("/forgot-password",methods=['GET','POST'])
 def forgot_password():
-    msg = {"msg":"forgot password?"}
-    return jsonify(msg)
+    if request.method == 'POST':
+        email = request.json.get("email",None):
+        if not email:
+            return jsonify({"msg":"email is required"}),500
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return jsonify({"msg":"user does not exists"}),404
+        reset_token = ""
+        return jsonify({"msg":"an email with password reset link has been sent to you"})
+    return jsonify({"msg":"invalid request method"}),401
+
+@auth.route("/reset-password/<token>",methods=['GET','POST'])
+def reset_password(token):
+    #TODO Check the token if its valid
+    user_id = token #get user id based on token
+    return jsonify({"msg":"password reset successfully"})
+
 
