@@ -60,7 +60,7 @@ def register():
 @auth.route("/forgot-password",methods=['GET','POST'])
 def forgot_password():
     if request.method == 'POST':
-        email = request.json.get("email",None):
+        email = request.json.get("email",None)
         if not email:
             return jsonify({"msg":"email is required"}),500
         user = User.query.filter_by(email=email).first()
