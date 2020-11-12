@@ -1,9 +1,8 @@
-from flask import Blueprint
-from flask import jsonify,request,url_for,redirect
-from flask_jwt_extended import create_access_token,get_jwt_identity,jwt_required
-
-from app.tujuanex.models import User
 from app import db
+from app.tujuanex.models import User
+from flask import Blueprint, jsonify, redirect, request, url_for
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 
 auth = Blueprint('auth',__name__)
 
