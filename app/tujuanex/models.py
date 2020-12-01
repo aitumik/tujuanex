@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from flask import current_app,request,url_for
 from app import db
 from datetime import datetime
+import json
 
 #associtation table
 followers = db.Table("followers",
@@ -96,6 +97,10 @@ class User(db.Model):
         }
 
         return json_user
+
+    def toJson(self):
+        return json.dumps(self,default=lambda o:
+                o.__dict__,sort_keys=True,indent=4)
 
     def save(self):
         db.session.add(self)
