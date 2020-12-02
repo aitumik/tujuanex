@@ -17,10 +17,10 @@ def create_app(config_name):
 
     from .tujuanex.controllers import main as main_blueprint
     from .auth.controllers import auth as auth_blueprint
-    from .main.controllers import main as main_template
+    from .home.controllers import home as home_blueprint
 
     app.register_blueprint(main_blueprint,url_prefix="/api/v1")
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(home_blueprint,url_prefix="/")
     app.register_blueprint(auth_blueprint,url_prefix="/api/v1/auth/")
 
     return app
