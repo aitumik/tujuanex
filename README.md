@@ -34,13 +34,24 @@ python3 manage.py runserver
 ```
 
 ### Registering a user
-To register a user post to this endpoint <code>api/v1/auth/register</code>
+To register a user post to this endpoint <code>api/v1/auth/register</code> with
+the below structure
 ```javascript
 {
     "username": "aitumik",
     "password": "testing",
     "email": "aitumik@tujuanex.com",
     "phone": "+2547099707792"
+}
+```
+
+### Logging in and getting and access token
+To login post to this endpoint <code>api/v1/auth/login</code> with the below
+structure
+```javascript
+{
+    "username":"aitumik",
+    "password":"testing"
 }
 ```
 
