@@ -33,7 +33,18 @@ Finally start the server by:
 python3 manage.py runserver
 ```
 
-## Performing your first requests
+### Registering a user
+To register a user post to this endpoint <code>api/v1/auth/register</code>
+```javascript
+{
+    "username": "aitumik",
+    "password": "testing",
+    "email": "aitumik@tujuanex.com",
+    "phone": "+2547099707792"
+}
+```
+
+### Performing your first requests
 To make api calls to the app you can use any tool of your choice or language but for our case we will use curl
 ```bash
 curl http://localhost:5000/api/v1/<endpoint>
