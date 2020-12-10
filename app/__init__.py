@@ -1,11 +1,13 @@
 from flask_api import FlaskAPI,status,exceptions
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from config import config
 
 db = SQLAlchemy()
 jwt = JWTManager()
+cors = CORS()
 
 def create_app(config_name):
     app = FlaskAPI(__name__)
@@ -14,6 +16,7 @@ def create_app(config_name):
 
     db.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app)
 
     from .tujuanex.controllers import main as main_blueprint
     from .auth.controllers import auth as auth_blueprint
