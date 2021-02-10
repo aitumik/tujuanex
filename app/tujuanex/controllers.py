@@ -14,13 +14,18 @@ def home():
 #Posts
 
 @main.route("/posts",methods=['GET'])
-@jwt_required
+#@jwt_required
 def posts():
     if request.method == 'GET':
         posts = Post.query.all()
         res = [post.to_json() for post in posts]
         return jsonify({"msg":res})
     return jsonify({"msg":"invalid requests method"}),403
+
+@main.route("/post/<user_id>",methods=['OPTIONS','GET'])
+def get_post(user_id):
+    post = Post.query.get(int(user_id))
+    return jsonify({"msg": post.to_json()}),200
 
 @main.route("/post/create",methods=['POST'])
 @jwt_required
@@ -54,6 +59,16 @@ def editpost(post_id):
         except Exception as e:
             return jsonfi({"msg":str(e)}),302
     return jsonify({"msg":"invalid request method"}),304
+
+@main.route("/post/comment/<int:post_id>",methods=['OPTIONS','POST'])
+def create_comment(post_id):
+    print(request.get_json())
+    commentBody = request.json.get("comment")
+    comment = Comment(body=commentBody)
+    comment.post_id = int(post_id)
+    return jsonify({"msg": "comment created successfully"}), 201
+    
+
 
 @main.route("/user/<username>",methods=['GET','POST'])
 def user(username):

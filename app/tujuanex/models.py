@@ -142,7 +142,8 @@ class Post(db.Model):
             "id":self.id,
             "body":self.body,
             "timestamp":self.timestamp,
-            "user_id": self.author.id
+            "user_id": self.author.id,
+            "comments": [c.to_json() for c in self.comments]
             }
         return data
 
@@ -179,6 +180,12 @@ class Comment(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    def to_json(self):
+        data = {
+            "body": self.body
+            }
+        return data
 
     def __repr__(self):
         return "<Comment {}>".format(self.body)
