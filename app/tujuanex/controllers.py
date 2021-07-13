@@ -67,8 +67,12 @@ def create_comment(post_id):
     comment = Comment(body=commentBody)
     comment.post_id = int(post_id)
     return jsonify({"msg": "comment created successfully"}), 201
-    
 
+    
+@main.route("/users/<id>",methods=['GET','POST'])
+def user_with_id(id):
+    user = User.query.get(int(id))
+    return jsonify(user.to_json())
 
 @main.route("/user/<username>",methods=['GET','POST'])
 def user(username):
