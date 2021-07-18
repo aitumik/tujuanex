@@ -46,6 +46,9 @@ class User(db.Model):
     description = db.Column(db.Text())
     image = db.Column(db.String(100))
 
+    # New feature(yeeey....)
+    profile_visits = db.Column(db.Integer,default=0)
+
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
