@@ -61,6 +61,11 @@ To make api calls to the app you can use any tool of your choice or language but
 curl http://localhost:5000/api/v1/<endpoint>
 ```
 
+### Creating posts
+```bash
+curl http://localhost:5000/api/v1/posts/create -H '{"Authorization: Bearer "token"}' -d '{"name": "Hello There"}'
+```
+
 ## Contributing
 Pull requests are welcome. For major changes please open an issue first 
 to discuss what you want to change
